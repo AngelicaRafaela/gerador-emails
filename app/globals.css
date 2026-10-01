@@ -1,16 +1,19 @@
 :root {
-  --mesa: #5b7b6c;
-  --pasta: #ecd9a0;
-  --pasta-escura: #cdb676;
-  --papel: #fbf6e6;
-  --tinta: #2b2a24;
-  --suave: #6a6244;
-  --borda: #b9a468;
-  --carimbo: #2e3b8f;
-  --carimbo-fundo: #1b2563;
-  --vermelho: #b3382a;
-  --erro: #9d2419;
-  --aviso-fundo: #f6e3a6;
+  --mesa: #62cfdf;
+  --tinta-topo: #12303a;
+  --pasta: #dccdf5;
+  --pasta-escura: #b79ce6;
+  --papel: #fbfbe8;
+  --tinta: #2a2340;
+  --suave: #54467d;
+  --borda: #9a82cf;
+  --linha: #cdd592;
+  --carimbo: #5a3fb5;
+  --carimbo-fundo: #3b2780;
+  --cian: #1fb3c8;
+  --vermelho: #e8575a;
+  --erro: #a3262a;
+  --aviso-fundo: #f1f4b8;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
@@ -18,13 +21,13 @@ html, body { margin: 0; background: var(--mesa); color: var(--tinta); }
 body { font-family: var(--font-texto), "Courier New", monospace; font-size: 1.02rem; line-height: 1.65; min-height: 100vh; }
 
 .miolo { max-width: 800px; margin: 0 auto; padding: 0 24px; }
-.topo { padding: 64px 0 28px; color: #fffaf0; }
+.topo { padding: 64px 0 28px; color: var(--tinta-topo); }
 h1 { font-family: var(--font-titulo), "Courier New", monospace; font-weight: 400; font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.15; margin: 0 0 16px; }
-.sub { margin: 0; max-width: 56ch; font-size: 1.05rem; color: #fffaf0; }
+.sub { margin: 0; max-width: 56ch; font-size: 1.05rem; color: var(--tinta-topo); }
 
 /* Pasta de arquivo */
 .mesa { padding: 52px 24px 96px; }
-.mesa > form { position: relative; background: var(--pasta); border: 2px solid var(--pasta-escura); border-radius: 4px 12px 12px 12px; padding: 52px 48px 52px; box-shadow: 0 3px 0 rgba(0,0,0,.12), 0 22px 40px rgba(20,40,30,.35); }
+.mesa > form { position: relative; background: var(--pasta); border: 2px solid var(--pasta-escura); border-radius: 4px 12px 12px 12px; padding: 52px 48px 52px; box-shadow: 0 3px 0 rgba(0,0,0,.12), 0 22px 40px rgba(40,60,110,.30); }
 .abas { position: absolute; top: -42px; left: 22px; display: flex; gap: 6px; }
 .aba { background: var(--pasta-escura); border: 2px solid var(--pasta-escura); border-bottom: 0; border-radius: 12px 12px 0 0; padding: 10px 20px 8px; font: inherit; font-weight: 700; color: var(--suave); cursor: pointer; height: 42px; }
 .aba:hover { color: var(--tinta); }
@@ -33,14 +36,14 @@ h1 { font-family: var(--font-titulo), "Courier New", monospace; font-weight: 400
 label { display: block; font-family: var(--font-titulo), monospace; font-size: 1.1rem; margin: 30px 0 10px; }
 label:first-of-type { margin-top: 0; }
 input, textarea { width: 100%; font: inherit; color: var(--tinta); background: var(--papel); border: 2px solid var(--borda); border-radius: 4px; padding: 14px 16px; }
-input::placeholder, textarea::placeholder { color: #9a916d; }
+input::placeholder, textarea::placeholder { color: #9a90b4; }
 input:focus, textarea:focus { outline: 3px solid var(--carimbo); outline-offset: 2px; border-color: var(--carimbo); }
 textarea { resize: vertical; min-height: 160px; }
 .dica { color: var(--suave); font-size: .9rem; margin-top: 10px; }
 
 /* Botões em forma de tecla de máquina de escrever */
 .btn { background: var(--carimbo); color: #fffaf0; border: 0; border-radius: 12px; padding: 14px 28px; font: inherit; font-weight: 700; cursor: pointer; box-shadow: 0 5px 0 var(--carimbo-fundo); transform: translateY(0); }
-.btn:hover:not(:disabled) { background: #3a49a3; }
+.btn:hover:not(:disabled) { background: #6e52c9; }
 .btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 1px 0 var(--carimbo-fundo); }
 .btn:disabled { opacity: .7; cursor: wait; }
 .btn.sec { background: var(--papel); color: var(--tinta); border: 2px solid var(--borda); box-shadow: 0 5px 0 var(--borda); padding: 12px 22px; }
@@ -52,9 +55,9 @@ button:focus-visible { outline: 3px solid var(--vermelho); outline-offset: 3px; 
 .aviso { background: var(--aviso-fundo); border-left: 6px solid var(--vermelho); padding: 12px 16px; margin: 0 0 8px; font-size: .94rem; }
 
 /* Pop-up: a carta sobre a mesa */
-.veu { position: fixed; inset: 0; z-index: 50; background: rgba(28, 44, 36, .68); display: grid; place-items: center; padding: 24px; overflow-y: auto; }
+.veu { position: fixed; inset: 0; z-index: 50; background: rgba(42, 28, 84, .62); display: grid; place-items: center; padding: 24px; overflow-y: auto; }
 .saida { position: relative; width: min(720px, 100%); max-height: calc(100vh - 48px); overflow-y: auto; background: var(--papel); border-radius: 4px; padding: 52px 48px 40px; box-shadow: 0 30px 70px rgba(0,0,0,.45); }
-.saida::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 14px; background: repeating-linear-gradient(-45deg, var(--vermelho) 0 14px, var(--papel) 14px 22px, var(--carimbo) 22px 36px, var(--papel) 36px 44px); }
+.saida::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 14px; background: repeating-linear-gradient(-45deg, var(--vermelho) 0 14px, var(--papel) 14px 22px, var(--cian) 22px 36px, var(--papel) 36px 44px); }
 @media (prefers-reduced-motion: no-preference) { .saida { animation: subir .28s ease-out; } }
 @keyframes subir { from { opacity: 0; transform: translateY(24px) scale(.97); } }
 .barra { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
@@ -64,7 +67,7 @@ button:focus-visible { outline: 3px solid var(--vermelho); outline-offset: 3px; 
 .saida label { font-size: .95rem; margin: 22px 0 4px; color: var(--suave); }
 .saida input { background: transparent; border: 0; border-bottom: 2px solid var(--borda); border-radius: 0; padding: 8px 0 10px; font-weight: 700; }
 .saida input:focus { outline: 0; border-bottom-color: var(--carimbo); }
-.saida textarea.corpo { background: transparent repeating-linear-gradient(transparent 0 33px, #d9cda2 33px 34px); background-attachment: local; border: 0; padding: 0; min-height: 340px; line-height: 34px; font-size: 1.02rem; }
+.saida textarea.corpo { background: transparent repeating-linear-gradient(transparent 0 33px, var(--linha) 33px 34px); background-attachment: local; border: 0; padding: 0; min-height: 340px; line-height: 34px; font-size: 1.02rem; }
 .saida textarea.corpo:focus { outline: 0; }
 .acoes { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 32px; padding-top: 28px; border-top: 2px dashed var(--borda); }
 .acoes .btn { margin: 0; }
