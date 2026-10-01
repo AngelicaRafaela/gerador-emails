@@ -9,7 +9,7 @@ function separar(bruto) {
 
 export default function Home() {
   const [acao, setAcao] = useState("criar");
-  const [f, setF] = useState({ destinatario: "", topicos: "", diretrizes: "", original: "", codigo: "" });
+  const [f, setF] = useState({ destinatario: "", topicos: "", diretrizes: "", original: "", assuntoOriginal: "", codigo: "" });
   const [gerado, setGerado] = useState(false);
   const [aberto, setAberto] = useState(false);
   const [para, setPara] = useState("");
@@ -45,7 +45,9 @@ export default function Home() {
       catch { throw new Error(`Resposta inesperada do servidor (${r.status}): ${bruto.slice(0, 200)}`); }
       if (!r.ok) throw new Error(d.error || "Não foi possível gerar o e-mail.");
       const s = separar(d.texto);
-      setAssunto(s.assunto); setCorpo(s.corpo); setGerado(true); setAberto(true);
+      const base = f.assuntoOriginal.trim().replace(/^((re|res|enc|fw|fwd)\s*:\s*)+/i, "");
+      setAssunto(acao === "responder" ? (base ? `RES: ${base}` : s.assunto) : s.assunto);
+      setCorpo(s.corpo); setGerado(true); setAberto(true);
       if (d.aviso) setAviso(d.aviso);
     } catch (err) {
       setErro(err.message);
@@ -100,6 +102,8 @@ export default function Home() {
               <textarea id="dir" required value={f.diretrizes} onChange={set("diretrizes")} style={{ minHeight: 100 }} placeholder="Ex.: Aceitar a proposta, mas pedir prazo de pagamento de 60 dias." />
               <label htmlFor="ori">E-mail recebido</label>
               <textarea id="ori" required value={f.original} onChange={set("original")} style={{ minHeight: 200 }} placeholder="Cole aqui o texto do e-mail original." />
+              <label htmlFor="aso">Assunto do e-mail recebido (opcional)</label>
+              <input id="aso" value={f.assuntoOriginal} onChange={set("assuntoOriginal")} placeholder="Ex.: Proposta comercial - Pedido 1234" />
             </>
           )}
 
