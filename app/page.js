@@ -15,6 +15,7 @@ export default function Home() {
   const [assunto, setAssunto] = useState("");
   const [corpo, setCorpo] = useState("");
   const [erro, setErro] = useState("");
+  const [aviso, setAviso] = useState("");
   const [carregando, setCarregando] = useState(false);
   const [copiado, setCopiado] = useState(false);
 
@@ -22,7 +23,7 @@ export default function Home() {
 
   async function gerar(e) {
     e.preventDefault();
-    setCarregando(true); setErro(""); setCopiado(false);
+    setCarregando(true); setErro(""); setAviso(""); setCopiado(false);
     try {
       const r = await fetch("/api/email", {
         method: "POST",
@@ -36,7 +37,7 @@ export default function Home() {
       if (!r.ok) throw new Error(d.error || "Não foi possível gerar o e-mail.");
       const s = separar(d.texto);
       setAssunto(s.assunto); setCorpo(s.corpo); setGerado(true);
-      if (d.aviso) setErro(d.aviso);
+      if (d.aviso) setAviso(d.aviso);
     } catch (err) {
       setErro(err.message);
     } finally {
@@ -97,6 +98,7 @@ export default function Home() {
 
           <button className="btn" disabled={carregando}>{carregando ? "Gerando…" : "Gerar e-mail"}</button>
           {erro && <p className="erro" role="alert">{erro}</p>}
+          {aviso && <p className="aviso" role="status">{aviso}</p>}
         </form>
 
         <section aria-live="polite">
