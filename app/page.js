@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function separar(bruto) {
   const t = bruto.replace(/\*\*/g, "").trim();
@@ -11,6 +11,7 @@ export default function Home() {
   const [acao, setAcao] = useState("criar");
   const [f, setF] = useState({ destinatario: "", topicos: "", diretrizes: "", original: "", codigo: "" });
   const [gerado, setGerado] = useState(false);
+  const [aberto, setAberto] = useState(false);
   const [para, setPara] = useState("");
   const [assunto, setAssunto] = useState("");
   const [corpo, setCorpo] = useState("");
@@ -20,6 +21,14 @@ export default function Home() {
   const [copiado, setCopiado] = useState(false);
 
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
+
+  useEffect(() => {
+    if (!aberto) return;
+    const tecla = (e) => e.key === "Escape" && setAberto(false);
+    document.addEventListener("keydown", tecla);
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", tecla); document.body.style.overflow = ""; };
+  }, [aberto]);
 
   async function gerar(e) {
     e.preventDefault();
@@ -36,7 +45,7 @@ export default function Home() {
       catch { throw new Error(`Resposta inesperada do servidor (${r.status}): ${bruto.slice(0, 200)}`); }
       if (!r.ok) throw new Error(d.error || "Não foi possível gerar o e-mail.");
       const s = separar(d.texto);
-      setAssunto(s.assunto); setCorpo(s.corpo); setGerado(true);
+      setAssunto(s.assunto); setCorpo(s.corpo); setGerado(true); setAberto(true);
       if (d.aviso) setAviso(d.aviso);
     } catch (err) {
       setErro(err.message);
@@ -67,11 +76,11 @@ export default function Home() {
   return (
     <main>
       <header className="topo"><div className="miolo">
-      <h1>Redator de e-mails corporativos</h1>
-      <p className="sub">Crie um e-mail formal a partir de tópicos ou responda a uma mensagem recebida, em português e com tom corporativo.</p>
+        <h1>Redator de e-mails corporativos</h1>
+        <p className="sub">Crie um e-mail formal a partir de tópicos ou responda a uma mensagem recebida, em português e com tom corporativo.</p>
       </div></header>
 
-      <div className="miolo grade">
+      <div className="miolo mesa">
         <form onSubmit={gerar}>
           <div className="abas" role="tablist">
             <button type="button" role="tab" className="aba" aria-selected={acao === "criar"} onClick={() => setAcao("criar")}>Criar e-mail</button>
@@ -88,9 +97,9 @@ export default function Home() {
           ) : (
             <>
               <label htmlFor="dir">Diretrizes da resposta</label>
-              <textarea id="dir" required value={f.diretrizes} onChange={set("diretrizes")} style={{ minHeight: 80 }} placeholder="Ex.: Aceitar a proposta, mas pedir prazo de pagamento de 60 dias." />
+              <textarea id="dir" required value={f.diretrizes} onChange={set("diretrizes")} style={{ minHeight: 100 }} placeholder="Ex.: Aceitar a proposta, mas pedir prazo de pagamento de 60 dias." />
               <label htmlFor="ori">E-mail recebido</label>
-              <textarea id="ori" required value={f.original} onChange={set("original")} style={{ minHeight: 180 }} placeholder="Cole aqui o texto do e-mail original." />
+              <textarea id="ori" required value={f.original} onChange={set("original")} style={{ minHeight: 200 }} placeholder="Cole aqui o texto do e-mail original." />
             </>
           )}
 
@@ -98,36 +107,37 @@ export default function Home() {
           <input id="cod" type="password" value={f.codigo} onChange={set("codigo")} autoComplete="off" />
           <div className="dica">Necessário apenas se o administrador configurou um código.</div>
 
-          <button className="btn" disabled={carregando}>{carregando ? "Gerando…" : "Gerar e-mail"}</button>
-          {erro && <p className="erro" role="alert">{erro}</p>}
-          {aviso && <p className="aviso" role="status">{aviso}</p>}
-        </form>
-
-        <section aria-live="polite">
-          <div className="barra">
-            <h2>E-mail gerado</h2>
-            {gerado && <button type="button" className="btn sec" onClick={copiar}>{copiado ? "Copiado" : "Copiar texto"}</button>}
+          <div className="linha">
+            <button className="btn" disabled={carregando}>{carregando ? "Datilografando…" : "Gerar e-mail"}</button>
+            {gerado && !aberto && <button type="button" className="btn sec" onClick={() => setAberto(true)}>Ver último e-mail</button>}
           </div>
-
-          {gerado ? (
-            <div className="saida">
-              <label htmlFor="para" style={{ marginTop: 0 }}>Para</label>
-              <input id="para" type="email" multiple value={para} onChange={(e) => setPara(e.target.value)} placeholder="nome@empresa.com.br" />
-              <label htmlFor="ass">Assunto</label>
-              <input id="ass" value={assunto} onChange={(e) => setAssunto(e.target.value)} />
-              <label htmlFor="cor">Mensagem</label>
-              <textarea id="cor" className="corpo" value={corpo} onChange={(e) => setCorpo(e.target.value)} />
-              <div className="acoes">
-                <button type="button" className="btn" onClick={abrirOutlook}>Enviar pelo Outlook</button>
-                <button type="button" className="btn sec" onClick={abrirOutlookWeb}>Abrir no Outlook na web</button>
-              </div>
-              <div className="dica">O Outlook abre com o e-mail preenchido; o envio é feito por lá. Revise o texto antes de enviar.</div>
-            </div>
-          ) : (
-            <div className="saida"><span className="vazio">Seu e-mail vai aparecer aqui, pronto para editar e abrir no Outlook.</span></div>
-          )}
-        </section>
+          {erro && <p className="erro" role="alert">{erro}</p>}
+        </form>
       </div>
+
+      {aberto && (
+        <div className="veu" onMouseDown={(e) => { if (e.target === e.currentTarget) setAberto(false); }}>
+          <section className="saida" role="dialog" aria-modal="true" aria-labelledby="tit-carta">
+            <div className="barra">
+              <h2 id="tit-carta">E-mail gerado</h2>
+              <button type="button" className="fechar" onClick={() => setAberto(false)} aria-label="Fechar">×</button>
+            </div>
+            {aviso && <p className="aviso" role="status">{aviso}</p>}
+            <label htmlFor="para">Para</label>
+            <input id="para" type="email" multiple value={para} onChange={(e) => setPara(e.target.value)} placeholder="nome@empresa.com.br" />
+            <label htmlFor="ass">Assunto</label>
+            <input id="ass" value={assunto} onChange={(e) => setAssunto(e.target.value)} />
+            <label htmlFor="cor">Mensagem</label>
+            <textarea id="cor" className="corpo" value={corpo} onChange={(e) => setCorpo(e.target.value)} />
+            <div className="acoes">
+              <button type="button" className="btn" onClick={abrirOutlook}>Enviar pelo Outlook</button>
+              <button type="button" className="btn sec" onClick={abrirOutlookWeb}>Outlook na web</button>
+              <button type="button" className="btn sec" onClick={copiar}>{copiado ? "Copiado" : "Copiar texto"}</button>
+            </div>
+            <div className="dica">O Outlook abre com o e-mail preenchido; o envio é feito por lá. Revise o texto antes de enviar.</div>
+          </section>
+        </div>
+      )}
     </main>
   );
 }
