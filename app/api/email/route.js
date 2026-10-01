@@ -1,7 +1,7 @@
 import { SYSTEM_PROMPT } from "@/lib/prompt";
 
 export const maxDuration = 30;
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash";
 const MAX = 8000;
 
 export async function POST(req) {
