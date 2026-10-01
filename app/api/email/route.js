@@ -1,10 +1,10 @@
 import { SYSTEM_PROMPT } from "@/lib/prompt";
 
-export const maxDuration = 30;
+export const maxDuration = 60;
 const MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash";
 const MAX = 8000;
 
-export async function POST(req) {
+async function tratar(req) {
   const code = process.env.ACCESS_CODE;
   if (code && req.headers.get("x-access-code") !== code) {
     return Response.json({ error: "Código de acesso inválido." }, { status: 401 });
@@ -46,4 +46,11 @@ export async function POST(req) {
   const texto = (data.candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("").trim();
   if (!texto) return Response.json({ error: "O modelo não retornou texto. Tente reformular." }, { status: 502 });
   return Response.json({ texto });
+}
+export async function POST(req) {
+  try {
+    return await tratar(req);
+  } catch (e) {
+    return Response.json({ error: "Erro interno: " + (e?.message || e) }, { status: 500 });
+  }
 }

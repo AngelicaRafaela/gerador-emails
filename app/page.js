@@ -29,7 +29,10 @@ export default function Home() {
         headers: { "Content-Type": "application/json", "x-access-code": f.codigo },
         body: JSON.stringify({ acao, ...f }),
       });
-      const d = await r.json();
+      const bruto = await r.text();
+      let d;
+      try { d = JSON.parse(bruto); }
+      catch { throw new Error(`Resposta inesperada do servidor (${r.status}): ${bruto.slice(0, 200)}`); }
       if (!r.ok) throw new Error(d.error || "Não foi possível gerar o e-mail.");
       const s = separar(d.texto);
       setAssunto(s.assunto); setCorpo(s.corpo); setGerado(true);
