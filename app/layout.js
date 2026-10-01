@@ -1,6 +1,5 @@
 import "./globals.css";
 import { Fraunces, DM_Sans } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 
 const titulo = Fraunces({ subsets: ["latin"], variable: "--font-titulo", display: "swap" });
 const texto = DM_Sans({ subsets: ["latin"], variable: "--font-texto", display: "swap" });
