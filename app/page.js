@@ -79,7 +79,7 @@ export default function Home() {
     <main>
       <header className="topo"><div className="miolo">
         <h1>Redator de e-mails corporativos</h1>
-        <p className="sub">Crie um e-mail formal a partir de tópicos ou responda a uma mensagem recebida, em português e com tom corporativo.</p>
+        <p className="sub">Crie um e-mail formal a partir de tópicos ou responda a uma mensagem recebida.</p>
       </div></header>
 
       <div className="miolo mesa">
