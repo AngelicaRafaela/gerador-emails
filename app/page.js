@@ -65,11 +65,13 @@ export default function Home() {
   }
 
   return (
-    <main className="pagina">
+    <main>
+      <header className="topo"><div className="miolo">
       <h1>Redator de e-mails corporativos</h1>
       <p className="sub">Crie um e-mail formal a partir de tópicos ou responda a uma mensagem recebida, em português e com tom corporativo.</p>
+      </div></header>
 
-      <div className="grade">
+      <div className="miolo grade">
         <form onSubmit={gerar}>
           <div className="abas" role="tablist">
             <button type="button" role="tab" className="aba" aria-selected={acao === "criar"} onClick={() => setAcao("criar")}>Criar e-mail</button>
@@ -122,7 +124,7 @@ export default function Home() {
               <div className="dica">O Outlook abre com o e-mail preenchido; o envio é feito por lá. Revise o texto antes de enviar.</div>
             </div>
           ) : (
-            <div className="saida"><span className="vazio">O e-mail gerado aparecerá aqui, editável, com o botão para abrir no Outlook.</span></div>
+            <div className="saida"><span className="vazio">Seu e-mail vai aparecer aqui, pronto para editar e abrir no Outlook.</span></div>
           )}
         </section>
       </div>
