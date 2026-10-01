@@ -36,6 +36,7 @@ export default function Home() {
       if (!r.ok) throw new Error(d.error || "Não foi possível gerar o e-mail.");
       const s = separar(d.texto);
       setAssunto(s.assunto); setCorpo(s.corpo); setGerado(true);
+      if (d.aviso) setErro(d.aviso);
     } catch (err) {
       setErro(err.message);
     } finally {
